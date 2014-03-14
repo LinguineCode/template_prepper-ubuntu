@@ -6,6 +6,11 @@
 
 PUPPETMASTER_HOST="10.34.140.10"
 
+if [[ $EUID -ne 0 ]]; then
+  echo "$0: This script must be run as root" 1>&2
+  exit 1
+fi
+
 install_puppet() {
   cat << EOF > /etc/apt/sources.list.d/puppetlabs.list 
 # Puppetlabs products
