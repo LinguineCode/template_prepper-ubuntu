@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Inspiration:
-# https://help.ubuntu.com/community/OpenVZ
-# http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
+# Official repo: https://github.com/nixmore/template_prepper-ubuntu
+# Inspiration from: http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
+#                   and https://help.ubuntu.com/community/OpenVZ
 
 PUPPETMASTER_HOST="10.34.140.10"
 
