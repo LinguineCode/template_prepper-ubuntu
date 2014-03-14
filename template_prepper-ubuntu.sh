@@ -6,26 +6,19 @@
 
 PUPPETMASTER_HOST="10.34.140.10"
 
+if [[ $(lsb_release -i) != *Ubuntu ]]; then
+  echo "$0: This script only runs on Ubuntu operating systems"
+  exit 1
+fi
+
 if [[ $EUID -ne 0 ]]; then
   echo "$0: This script must be run as root" 1>&2
   exit 1
 fi
 
 install_puppet() {
-  cat << EOF > /etc/apt/sources.list.d/puppetlabs.list 
-# Puppetlabs products
-deb http://apt.puppetlabs.com precise main
-deb-src http://apt.puppetlabs.com precise main
-
-# Puppetlabs dependencies
-deb http://apt.puppetlabs.com precise dependencies
-deb-src http://apt.puppetlabs.com precise dependencies
-
-# Puppetlabs devel (uncomment to activate)
-# deb http://apt.puppetlabs.com precise devel
-# deb-src http://apt.puppetlabs.com precise devel
-EOF
-
+  wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
+  dpkg -i puppetlabs-release-precise.deb
   apt-get update
   apt-get install -y puppet
 
@@ -38,6 +31,7 @@ EOF
   sed -i '/ puppet$/ d' /etc/hosts
   echo "$PUPPETMASTER_HOST puppet" >> /etc/hosts
 
+  sed -i /etc/default/puppet -e 's/START=no/START=yes/'
   puppet resource service puppet enable=true
 }
 
