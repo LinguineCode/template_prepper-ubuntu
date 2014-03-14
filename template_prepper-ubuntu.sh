@@ -23,7 +23,8 @@ install_puppet() {
   apt-get update
   apt-get install -y puppet
 
-  cat << EOF >> /etc/puppet/puppet.conf
+  grep ^server /etc/puppet/puppet.conf || cat << EOF >> /etc/puppet/puppet.conf
+  
 server = puppet
 report = true
 pluginsync = true
@@ -34,6 +35,10 @@ EOF
 
   sed -i /etc/default/puppet -e 's/START=no/START=yes/'
   puppet resource service puppet enable=true
+}
+
+install_packages() {
+  apt-get install -y openssh-server
 }
 
 regenerate_host_sshkeys() {
@@ -63,6 +68,7 @@ cleanup() {
 }
 
 install_puppet
+install_packages
 regenerate_host_sshkeys
 cleanup
 
