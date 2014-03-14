@@ -5,8 +5,6 @@
 #   http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
 #   https://help.ubuntu.com/community/OpenVZ
 
-PUPPETMASTER_HOST="10.34.140.10"
-
 if [[ $(lsb_release -i) != *Ubuntu ]]; then
   echo "$0: This script only runs on Ubuntu operating systems" 1>&2
   exit 1
@@ -18,8 +16,13 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 install_puppet() {
-  wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
-  dpkg -i puppetlabs-release-precise.deb
+  dpkg -s puppetlabs-release-precise &>/dev/null
+  if [ $? -ne 0 ]; then
+    wget https://apt.puppetlabs.com/puppetlabs-release-precise.deb
+    dpkg -i puppetlabs-release-precise.deb
+    rm -f puppetlabs-release-precise.deb
+  fi
+  
   apt-get update
   apt-get install -y puppet
 
@@ -30,8 +33,8 @@ report = true
 pluginsync = true
 EOF
 
-  sed -i '/ puppet$/ d' /etc/hosts
-  echo "$PUPPETMASTER_HOST puppet" >> /etc/hosts
+  #sed -i '/ puppet$/ d' /etc/hosts
+  #echo "$PUPPETMASTER_HOST puppet" >> /etc/hosts
 
   sed -i /etc/default/puppet -e 's/START=no/START=yes/'
   puppet resource service puppet enable=true
@@ -58,9 +61,9 @@ cleanup() {
   unset HISTFILE
   apt-get clean
   apt-get autoremove
-  find /home -mindepth 2 -delete
-  find ~root -mindepth 1 -delete
-  find /tmp -mindepth 1 -delete
+  rm -rf /home/*/.bash_history
+  rm -rf ~root/.bash_history
+  rm -rf /tmp/*
   logrotate -f /etc/logrotate.conf
   find /var/log -iname "*.[0-9]" -o -name "*.gz" -delete
   
