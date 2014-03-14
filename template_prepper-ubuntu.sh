@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Official repo: https://github.com/nixmore/template_prepper-ubuntu
-# Inspiration from: http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
-#                   and https://help.ubuntu.com/community/OpenVZ
+# Inspiration from:
+#   http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
+#   https://help.ubuntu.com/community/OpenVZ
 
 PUPPETMASTER_HOST="10.34.140.10"
 
 if [[ $(lsb_release -i) != *Ubuntu ]]; then
-  echo "$0: This script only runs on Ubuntu operating systems"
+  echo "$0: This script only runs on Ubuntu operating systems" 1>&2
   exit 1
 fi
 
@@ -62,3 +63,5 @@ cleanup() {
 install_puppet
 regenerate_host_sshkeys
 cleanup
+
+echo "Complete."
