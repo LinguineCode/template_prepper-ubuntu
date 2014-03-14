@@ -64,4 +64,4 @@ install_puppet
 regenerate_host_sshkeys
 cleanup
 
-echo "Complete."
+echo "$0: Complete."
