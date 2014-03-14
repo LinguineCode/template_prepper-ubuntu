@@ -58,6 +58,8 @@ cleanup() {
   find /tmp -mindepth 1 -delete
   logrotate -f /etc/logrotate.conf
   find /var/log -iname "*.[0-9]" -o -name "*.gz" -delete
+  
+  rm -f $0
 }
 
 install_puppet
