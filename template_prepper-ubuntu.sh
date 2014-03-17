@@ -65,8 +65,11 @@ cleanup() {
   unset HISTFILE
   apt-get clean
   apt-get autoremove
+  # Just remove ~/.bash_history for now, but investigate removing
+  # the whole home directory ~/
   rm -rf /home/*/.bash_history
   rm -rf ~root/.bash_history
+  #
   rm -rf /tmp/*
   logrotate -f /etc/logrotate.conf
   find /var/log -iname "*.[0-9]" -o -name "*.gz" -delete
