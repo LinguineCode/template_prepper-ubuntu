@@ -25,18 +25,22 @@ install_puppet() {
   
   apt-get update
   apt-get install -y puppet
+  
+  # Use the macaddress without colons ":" for a unique certname
+  puppet_certname=$(facter macaddress | sed -e 's/\://g')
 
   grep ^server /etc/puppet/puppet.conf || cat << EOF >> /etc/puppet/puppet.conf
 [agent]
 server = puppet
 report = true
 pluginsync = true
+certname = $puppet_certname
 EOF
 
   #sed -i '/ puppet$/ d' /etc/hosts
   #echo "$PUPPETMASTER_HOST puppet" >> /etc/hosts
-
-  sed -i /etc/default/puppet -e 's/START=no/START=yes/'
+  
+    sed -i /etc/default/puppet -e 's/START=no/START=yes/'
   puppet resource service puppet enable=true
 }
 
