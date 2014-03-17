@@ -27,7 +27,7 @@ install_puppet() {
   apt-get install -y puppet
 
   grep ^server /etc/puppet/puppet.conf || cat << EOF >> /etc/puppet/puppet.conf
-  
+[agent]
 server = puppet
 report = true
 pluginsync = true
