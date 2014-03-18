@@ -61,13 +61,9 @@ echo "\$HOSTNAME" > /etc/hostname
 sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
 }
 
-unlock_bashhistory() {
-chattr -a "/home/$SUDO_USER/.bash_history"
-}
-
 generate_sshkeys
 set_hostname
-unlock_bashhistory
+> /home/$SUDO_USER/.bash_history
 
 rm -f \$0
 EOF
