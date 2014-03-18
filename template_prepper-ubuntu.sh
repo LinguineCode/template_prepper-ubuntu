@@ -5,6 +5,9 @@
 #   http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
 #   https://help.ubuntu.com/community/OpenVZ
 
+# Run it like this:
+# wget https://raw.github.com/nixmore/template_prepper-ubuntu/master/template_prepper-ubuntu.sh -O - | bash
+
 if [[ $(lsb_release -i) != *Ubuntu ]]; then
   echo "$0: This script only runs on Ubuntu operating systems" 1>&2
   exit 1
@@ -98,5 +101,3 @@ cleanup
 echo "$0: Complete."
 
 exit
-
-wget https://raw.github.com/nixmore/template_prepper-ubuntu/master/template_prepper-ubuntu.sh
