@@ -64,7 +64,7 @@ echo "\$HOSTNAME" > /etc/hostname
 sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
 }
 
-clear_bashhistory {
+clear_bashhistory() {
  find /home -name ".bash_history" -delete
  find ~root -name ".bash_history" -delete
 }
