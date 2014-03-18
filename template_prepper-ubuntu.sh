@@ -6,7 +6,7 @@
 #   https://help.ubuntu.com/community/OpenVZ
 
 # Run it like this:
-# wget https://raw.github.com/nixmore/template_prepper-ubuntu/master/template_prepper-ubuntu.sh -O - | sudo bash
+# sudo wget https://raw.github.com/nixmore/template_prepper-ubuntu/master/template_prepper-ubuntu.sh -O - | sudo bash
 
 if [[ $(lsb_release -i) != *Ubuntu ]]; then
   echo "$0: This script only runs on Ubuntu operating systems" 1>&2
