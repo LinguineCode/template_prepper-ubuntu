@@ -71,7 +71,6 @@ EOF
 }
 
 cleanup() {
-  unset HISTFILE
   rm -rf /home/*/.bash_history
   rm -rf ~root/.bash_history
   
@@ -92,3 +91,5 @@ set_hostname
 cleanup
 
 echo "$0: Complete."
+
+unset HISTFILE
