@@ -44,7 +44,7 @@ install_packages() {
   apt-get install -y openssh-server
 }
 
-install_firstboot() {
+create_firstboot_script() {
   rm -f /etc/ssh/ssh_host_*
 
   cat << EOF > /etc/rc2.d/S15firstboot
@@ -61,9 +61,14 @@ echo "\$HOSTNAME" > /etc/hostname
 sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
 }
 
+clear_bashhistory {
+ find /home -name ".bash_history" -delete
+ find ~root -name ".bash_history" -delete
+}
+
 generate_sshkeys
 set_hostname
-> /home/$SUDO_USER/.bash_history
+clear_bashhistory
 
 rm -f \$0
 EOF
@@ -74,9 +79,6 @@ EOF
 cleanup() {
   rm -rf ~root/.bash_history
   rm -rf /home/*/.bash_history
-  touch "/home/$SUDO_USER/.bash_history"
-  chown $SUDO_USER:$SUDO_USER "/home/$SUDO_USER/.bash_history"
-  chattr +a "/home/$SUDO_USER/.bash_history"
   
   apt-get clean
   apt-get autoremove
@@ -90,7 +92,7 @@ cleanup() {
 
 install_puppet
 install_packages
-install_firstboot
+create_firstboot_script
 cleanup
 
 echo "$0: Complete."
