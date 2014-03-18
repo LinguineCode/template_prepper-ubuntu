@@ -44,30 +44,35 @@ install_packages() {
   apt-get install -y openssh-server
 }
 
-regenerate_host_sshkeys() {
+install_firstboot() {
   rm -f /etc/ssh/ssh_host_*
 
-  cat << EOF > /etc/rc2.d/S15ssh_gen_host_keys
-#!/bin/sh
+  cat << EOF > /etc/rc2.d/S15firstboot
+#!/bin/bash
+
+generate_sshkeys() {
 ssh-keygen -f /etc/ssh/ssh_host_rsa_key -t rsa -N ''
 ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
-rm -f \$0
-EOF
-
-  chmod a+x /etc/rc2.d/S15ssh_gen_host_keys
+}
+ 
+set_hostname() {
+HOSTNAME="\$(ifconfig -a | head -1 | awk '{print \$NF}' | sed -e 's/\://g')"
+echo "\$HOSTNAME" > /etc/hostname
+sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
 }
 
-set_hostname() {
-  
-  cat << EOF > /etc/rc2.d/S14set_hostname
-#!/bin/sh
-HOSTNAME="$(ifconfig -a | head -1 | awk '{print $NF}' | sed -e 's/\://g')"
-echo "$HOSTNAME" > /etc/hostname
-sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'$HOSTNAME'/g' /etc/hosts
+unlock_bashhistory() {
+chattr -a "/home/$SUDO_USER/.bash_history"
+}
+
+generate_sshkeys
+set_hostname
+unlock_bashhistory
+
 rm -f \$0
 EOF
 
-  chmod a+x /etc/rc2.d/S14set_hostname
+  chmod a+x /etc/rc2.d/S15firstboot
 }
 
 cleanup() {
@@ -88,8 +93,7 @@ cleanup() {
 
 install_puppet
 install_packages
-regenerate_host_sshkeys
-set_hostname
+install_firstboot
 cleanup
 
 echo "$0: Complete."
