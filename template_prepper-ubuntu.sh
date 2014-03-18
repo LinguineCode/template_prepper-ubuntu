@@ -71,8 +71,10 @@ EOF
 }
 
 cleanup() {
-  rm -rf /home/*/.bash_history
-  rm -rf ~root/.bash_history
+  rm -rf "~root/.bash_history"
+  rm -rf "/home/*/.bash_history"
+  touch "/home/$SUDO_USER/.bash_history"
+  chattr +a "/home/$SUDO_USER/.bash_history"
   
   apt-get clean
   apt-get autoremove
@@ -91,5 +93,3 @@ set_hostname
 cleanup
 
 echo "$0: Complete."
-
-unset HISTFILE
