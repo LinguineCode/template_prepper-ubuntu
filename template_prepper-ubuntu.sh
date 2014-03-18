@@ -59,7 +59,8 @@ ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
 }
  
 set_hostname() {
-HOSTNAME="\$(ifconfig -a | head -1 | awk '{print \$NF}' | sed -e 's/\://g')"
+PREFIX="ubuntu"
+HOSTNAME="\$PREFIX-\$(ifconfig -a | head -1 | awk '{print \$NF}' | sed -e 's/\://g')"
 echo "\$HOSTNAME" > /etc/hostname
 sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
 }
