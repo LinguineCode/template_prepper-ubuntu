@@ -79,6 +79,7 @@ cleanup() {
   rm -rf ~root/.bash_history
   rm -rf /home/*/.bash_history
   touch "/home/$SUDO_USER/.bash_history"
+  chown $SUDO_USER:$SUDO_USER "/home/$SUDO_USER/.bash_history"
   chattr +a "/home/$SUDO_USER/.bash_history"
   
   apt-get clean
