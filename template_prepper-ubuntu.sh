@@ -25,16 +25,13 @@ install_puppet() {
   
   apt-get update
   apt-get install -y puppet
-  
-  # Use the macaddress without colons ":" for a unique certname
-  puppet_certname=$(facter macaddress | sed -e 's/\://g')
 
-  grep ^server /etc/puppet/puppet.conf || cat << EOF >> /etc/puppet/puppet.conf
+  grep ^server /etc/puppet/puppet.conf || \
+cat << EOF >> /etc/puppet/puppet.conf
 [agent]
 server = puppet
 report = true
 pluginsync = true
-certname = $puppet_certname
 EOF
 
   #sed -i '/ puppet$/ d' /etc/hosts
@@ -61,15 +58,27 @@ EOF
   chmod a+x /etc/rc2.d/S15ssh_gen_host_keys
 }
 
+set_hostname() {
+  
+  cat << EOF > /etc/rc2.d/S15set_hostname
+#!/bin/sh
+HOSTNAME="$(ifconfig -a | head -1 | awk '{print $NF}' | sed -e 's/\://g')"
+echo "$HOSTNAME" > /etc/hostname
+sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'$HOSTNAME'/g' /etc/hosts
+rm -f \$0
+EOF
+
+  chmod a+x /etc/rc2.d/S15set_hostname
+}
+
 cleanup() {
   unset HISTFILE
-  apt-get clean
-  apt-get autoremove
-  # Just remove ~/.bash_history for now, but investigate removing
-  # the whole home directory ~/
   rm -rf /home/*/.bash_history
   rm -rf ~root/.bash_history
-  #
+  
+  apt-get clean
+  apt-get autoremove
+  
   rm -rf /tmp/*
   logrotate -f /etc/logrotate.conf
   find /var/log -iname "*.[0-9]" -o -name "*.gz" -delete
@@ -80,6 +89,7 @@ cleanup() {
 install_puppet
 install_packages
 regenerate_host_sshkeys
+set_hostname
 cleanup
 
 echo "$0: Complete."
