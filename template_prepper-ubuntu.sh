@@ -59,7 +59,7 @@ ssh-keygen -f /etc/ssh/ssh_host_dsa_key -t dsa -N ''
 }
  
 set_hostname() {
-PREFIX="ubuntu"
+PREFIX="ubuntu" #Maybe put your organization's name here
 HOSTNAME="\$PREFIX-\$(ifconfig -a | head -1 | awk '{print \$NF}' | sed -e 's/\://g')"
 echo "\$HOSTNAME" > /etc/hostname
 sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'\$HOSTNAME'/g' /etc/hosts
