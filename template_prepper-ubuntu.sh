@@ -59,7 +59,7 @@ EOF
 
 set_hostname() {
   
-  cat << EOF > /etc/rc2.d/S15set_hostname
+  cat << EOF > /etc/rc2.d/S14set_hostname
 #!/bin/sh
 HOSTNAME="$(ifconfig -a | head -1 | awk '{print $NF}' | sed -e 's/\://g')"
 echo "$HOSTNAME" > /etc/hostname
@@ -67,12 +67,12 @@ sed -i 's/127.0.1.1\tubuntu/127.0.1.1\t'$HOSTNAME'/g' /etc/hosts
 rm -f \$0
 EOF
 
-  chmod a+x /etc/rc2.d/S15set_hostname
+  chmod a+x /etc/rc2.d/S14set_hostname
 }
 
 cleanup() {
-  rm -rf "~root/.bash_history"
-  rm -rf "/home/*/.bash_history"
+  rm -rf ~root/.bash_history
+  rm -rf /home/*/.bash_history
   touch "/home/$SUDO_USER/.bash_history"
   chattr +a "/home/$SUDO_USER/.bash_history"
   
