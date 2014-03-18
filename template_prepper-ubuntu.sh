@@ -25,6 +25,8 @@ install_puppet() {
   
   apt-get update
   apt-get install -y puppet
+  
+  puppet resource service puppet ensure=stopped enable=true
 
   grep ^server /etc/puppet/puppet.conf || \
 cat << EOF >> /etc/puppet/puppet.conf
@@ -33,12 +35,9 @@ server = puppet
 report = true
 pluginsync = true
 EOF
-
-  #sed -i '/ puppet$/ d' /etc/hosts
-  #echo "$PUPPETMASTER_HOST puppet" >> /etc/hosts
   
     sed -i /etc/default/puppet -e 's/START=no/START=yes/'
-  puppet resource service puppet enable=true
+  
 }
 
 install_packages() {
