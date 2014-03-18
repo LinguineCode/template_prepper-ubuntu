@@ -96,3 +96,7 @@ create_firstboot_script
 cleanup
 
 echo "$0: Complete."
+
+exit
+
+wget https://raw.github.com/nixmore/template_prepper-ubuntu/master/template_prepper-ubuntu.sh
